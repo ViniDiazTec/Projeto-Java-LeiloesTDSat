@@ -7,28 +7,23 @@
  *
  * @author Adm
  */
-public class ProdutosDTO {
+public class Produtos {
+
     private Integer id;
     private String nome;
     private Integer valor;
     private String status;
 
-    public ProdutosDTO() {
+    public Produtos() {
     }
 
-    
-    
-    public ProdutosDTO(Integer id, String nome, Integer valor, String status) {
+    public Produtos(Integer id, String nome, Integer valor, String status) {
         this.id = id;
         this.nome = nome;
         this.valor = valor;
         this.status = status;
     }
 
-    
-    
-    
-    
     public Integer getId() {
         return id;
     }
@@ -60,5 +55,5 @@ public class ProdutosDTO {
     public void setStatus(String status) {
         this.status = status;
     }
-    
+
 }
