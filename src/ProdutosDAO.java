@@ -92,7 +92,7 @@ public class ProdutosDAO {
         }
     }
 
-    public List<Produtos> listarProdutosVendidos() {
+    public static List<Produtos> listarProdutosVendidos() {
     List<Produtos> vendidos = new ArrayList<>();
 
     try {
@@ -100,7 +100,7 @@ public class ProdutosDAO {
         Connection conexao = new conectaDAO().connectDB();
 
         // Instrução SQL
-        String sql = "SELECT * FROM produtos WHERE status = 'Vendido'";
+        String sql = "SELECT * FROM produtos WHERE status = 'vendido'";
         PreparedStatement consulta = conexao.prepareStatement(sql);
 
         // Executar a instrução SQL e obter os resultados
