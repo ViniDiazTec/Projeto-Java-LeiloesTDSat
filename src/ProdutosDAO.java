@@ -1,12 +1,4 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
 
-/**
- *
- * @author Adm
- */
 import java.sql.PreparedStatement;
 import java.sql.Connection;
 import javax.swing.JOptionPane;
@@ -47,37 +39,92 @@ public class ProdutosDAO {
 
     }
 
-public static List<Produtos> listarProdutos() {
-    List<Produtos> lista = new ArrayList<>();
+    public static List<Produtos> listarProdutos() {
+        List<Produtos> lista = new ArrayList<>();
+
+        try {
+            // Conectar ao banco
+            Connection conexao = new conectaDAO().connectDB();
+
+            // Instrução SQL
+            String sql = "SELECT * FROM produtos";
+            PreparedStatement consulta = conexao.prepareStatement(sql);
+
+            // Executar a instrução SQL e obter os resultados
+            ResultSet resposta = consulta.executeQuery();
+
+            // Iterar sobre os resultados e adicionar os produtos à lista
+            while (resposta.next()) {
+                Produtos produto = new Produtos();
+                produto.setId(resposta.getInt("id"));
+                produto.setNome(resposta.getString("nome"));
+                produto.setValor(resposta.getInt("valor")); // Definir o valor como double
+                produto.setStatus(resposta.getString("status"));
+                lista.add(produto);
+            }
+
+            // Fechar a conexão
+            conexao.close();
+        } catch (SQLException e) {
+            System.out.println("Erro ao listar os produtos: " + e.getMessage());
+        }
+
+        return lista;
+    }
+
+    public void venderProduto(int produtoId) {
+        try {
+            // Conectar ao banco
+            Connection conexao = new conectaDAO().connectDB();
+
+            // Instrução SQL para atualizar o status do produto
+            String sql = "UPDATE produtos SET status = 'Vendido' WHERE id = ?";
+            PreparedStatement pstmt = conexao.prepareStatement(sql);
+            pstmt.setInt(1, produtoId);
+
+            // Executar a instrução SQL
+            pstmt.executeUpdate();
+
+            // Fechar a conexão
+            conexao.close();
+        } catch (SQLException e) {
+            System.out.println("Erro ao vender o produto: " + e.getMessage());
+        }
+    }
+
+    public static List<Produtos> listarProdutosVendidos() {
+    List<Produtos> vendidos = new ArrayList<>();
 
     try {
         // Conectar ao banco
         Connection conexao = new conectaDAO().connectDB();
 
         // Instrução SQL
-        String sql = "SELECT * FROM produtos";
+        String sql = "SELECT * FROM produtos WHERE status = 'vendido'";
         PreparedStatement consulta = conexao.prepareStatement(sql);
 
         // Executar a instrução SQL e obter os resultados
         ResultSet resposta = consulta.executeQuery();
 
-        // Iterar sobre os resultados e adicionar os produtos à lista
+        // Iterar sobre os resultados e adicionar os produtos vendidos à lista
         while (resposta.next()) {
             Produtos produto = new Produtos();
             produto.setId(resposta.getInt("id"));
             produto.setNome(resposta.getString("nome"));
-            produto.setValor(resposta.getInt("valor")); // Definir o valor como double
+            produto.setValor(resposta.getInt("valor"));
             produto.setStatus(resposta.getString("status"));
-            lista.add(produto);
+            vendidos.add(produto);
         }
 
         // Fechar a conexão
         conexao.close();
     } catch (SQLException e) {
-        System.out.println("Erro ao listar os produtos: " + e.getMessage());
+        System.out.println("Erro ao listar os produtos vendidos: " + e.getMessage());
     }
 
-    return lista;
+    return vendidos;
 }
-
+    
+    
+    
 }
