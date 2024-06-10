@@ -1,5 +1,7 @@
 
 import java.util.ArrayList;
+import java.util.List;
+import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
 
 /*
@@ -17,7 +19,7 @@ public class listagemVIEW extends javax.swing.JFrame {
      */
     public listagemVIEW() {
         initComponents();
-        listarProdutos();
+
     }
 
     /**
@@ -41,18 +43,15 @@ public class listagemVIEW extends javax.swing.JFrame {
         btnVoltar = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
-
-        listaProdutos.setModel(new javax.swing.table.DefaultTableModel(
-            new Object [][] {
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null}
-            },
-            new String [] {
-                "ID", "Nome", "Valor", "Status"
+        addWindowFocusListener(new java.awt.event.WindowFocusListener() {
+            public void windowGainedFocus(java.awt.event.WindowEvent evt) {
+                formWindowGainedFocus(evt);
             }
-        ));
+            public void windowLostFocus(java.awt.event.WindowEvent evt) {
+            }
+        });
+
+        listaProdutos.setModel(montarTabela());
         jScrollPane1.setViewportView(listaProdutos);
 
         jLabel1.setFont(new java.awt.Font("Lucida Fax", 0, 18)); // NOI18N
@@ -139,8 +138,6 @@ public class listagemVIEW extends javax.swing.JFrame {
 
         ProdutosDAO produtosdao = new ProdutosDAO();
 
-        //produtosdao.venderProduto(Integer.parseInt(id));
-        listarProdutos();
     }//GEN-LAST:event_btnVenderActionPerformed
 
     private void btnVendasActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnVendasActionPerformed
@@ -151,6 +148,39 @@ public class listagemVIEW extends javax.swing.JFrame {
     private void btnVoltarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnVoltarActionPerformed
         this.dispose();
     }//GEN-LAST:event_btnVoltarActionPerformed
+    private DefaultTableModel montarTabela() {
+        // Definindo os nomes das colunas da tabela
+        String[] colunas = {"ID", "Nome", "Valor", "Status"};
+
+        // Criando uma tabela vazia com as colunas especificadas
+        DefaultTableModel tabela = new DefaultTableModel(colunas, 0);
+
+        // Obtendo a lista de todos os produtos do banco de dados
+        List<Produtos> lista = ProdutosDAO.listarProdutos();
+
+        // Iterando sobre cada produto na lista
+        for (Produtos produto : lista) {
+            // Criando uma linha de dados para o produto atual
+            Object[] linha = {
+                produto.getId(), // ID do produto
+                produto.getNome(), // Nome do produto
+                produto.getValor(), // Valor do produto
+                produto.getStatus() // Status do produto
+            };
+
+            // Adicionando a linha à tabela
+            tabela.addRow(linha);
+        }
+
+        // Retornando o modelo da tabela preenchido com os dados dos produtos
+        return tabela;
+    }
+    private void formWindowGainedFocus(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowGainedFocus
+        // TODO add your handling code here:
+        listaProdutos.setModel(montarTabela());
+        jScrollPane1.setViewportView(listaProdutos);
+
+    }//GEN-LAST:event_formWindowGainedFocus
 
     /**
      * @param args the command line arguments
@@ -200,25 +230,4 @@ public class listagemVIEW extends javax.swing.JFrame {
     private javax.swing.JTable listaProdutos;
     // End of variables declaration//GEN-END:variables
 
-    private void listarProdutos() {
-        try {
-            ProdutosDAO produtosdao = new ProdutosDAO();
-
-            DefaultTableModel model = (DefaultTableModel) listaProdutos.getModel();
-            model.setNumRows(0);
-
-            ArrayList<Produtos> listagem = produtosdao.listarProdutos();
-
-            for (int i = 0; i < listagem.size(); i++)  {
-                model.addRow(new Object[]{
-                    listagem.get(i).getId(),
-                    listagem.get(i).getNome(),
-                    listagem.get(i).getValor(),
-                    listagem.get(i).getStatus()
-                });
-            }
-        } catch (Exception e) {
-        }
-
-    }
 }
