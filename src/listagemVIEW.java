@@ -6,6 +6,8 @@ import javax.swing.table.DefaultTableModel;
 
 public class listagemVIEW extends javax.swing.JFrame {
 
+    ProdutosDAO produtosDAO = new ProdutosDAO();
+
     public listagemVIEW() {
         initComponents();
 
@@ -118,9 +120,14 @@ public class listagemVIEW extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void btnVenderActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnVenderActionPerformed
-        String id = id_produto_venda.getText();
+        int selectedRow = listaProdutos.getSelectedRow();
+        if (selectedRow != -1) {
+            int produtoId = (int) listaProdutos.getValueAt(selectedRow, 0);
+            produtosDAO.venderProduto(produtoId);
+            // Atualize a tabela para refletir a venda, recarregando os dados
+            // Código para atualizar a tabela após venda
+        }
 
-        ProdutosDAO produtosdao = new ProdutosDAO();
 
     }//GEN-LAST:event_btnVenderActionPerformed
 
